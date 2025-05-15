@@ -25,14 +25,15 @@ stages:
     type: shell
     sources:
       - type: tar
-        # switch to production build once in production
         url: https://github.com/Vanilla-OS/vanilla-tools/releases/download/continuous/vanilla-tools.tar.gz
     commands:
-    - mkdir -p /usr/bin
-    - cp /sources/vanilla-tools/vanilla-tools/vanilla-tools/lpkg /usr/bin/lpkg
-    - cp /sources/vanilla-tools/vanilla-tools/vanilla-tools/cur-gpu /usr/bin/cur-gpu
-    - chmod +x /usr/bin/lpkg
-    - chmod +x /usr/bin/cur-gpu
+      - mkdir -p /usr/bin
+      - cp /sources/vanilla-tools/vanilla-tools/lpkg /usr/bin/lpkg
+      - cp /sources/vanilla-tools/vanilla-tools/cur-gpu /usr/bin/cur-gpu
+      - cp /sources/vanilla-tools/vanilla-tools/prime-switch /usr/bin/prime-switch
+      - chmod +x /usr/bin/lpkg
+      - chmod +x /usr/bin/cur-gpu
+      - chmod +x /usr/bin/prime-switch
 
   - name: packages-modules
     type: includes
@@ -70,20 +71,20 @@ stages:
     modules:
       - name: install-nvidia
         type: apt
-        source:
-          packages:
-          - nvidia-kernel-open
-          - nvidia-driver
-          - nvidia-vaapi-driver
-          - nvidia-settings
-          - nvidia-persistenced
-          - cuda-drivers
-          - libnvidia-cfg1
-          - libnvidia-glcore
-          - libnvidia-glvkspirv
-          - libnvidia-gpucomp
-          - libnvidia-fbc1
-          - nvidia-container-toolkit
+        sources:
+          - packages:
+            - nvidia-kernel-open
+            - nvidia-driver
+            - nvidia-vaapi-driver
+            - nvidia-settings
+            - nvidia-persistenced
+            - cuda-drivers
+            - libnvidia-cfg1
+            - libnvidia-glcore
+            - libnvidia-glvkspirv
+            - libnvidia-gpucomp
+            - libnvidia-fbc1
+            - nvidia-container-toolkit
 
   - name: nvidia-sysd-units
     type: shell
@@ -96,22 +97,9 @@ stages:
 
   - name: extra-utilities
     type: apt
-    source:
-      packages:
-      - switcheroo-control
-
-  - name: vanilla-tools
-    type: shell
-    source:
-      type: tar
-      url: https://github.com/Vanilla-OS/vanilla-tools/releases/download/v1.0.0/vanilla-tools.tar.gz
-      checksum: 0e1d92d9c9154f9a115e97b40ff692afa52ddd0d9f770a8ec67440bf1a48aa72
-    commands:
-    - mkdir -p /usr/bin
-    - cp /sources/vanilla-tools/vanilla-tools/nrun /usr/bin/nrun
-    - cp /sources/vanilla-tools/vanilla-tools/prime-switch /usr/bin/prime-switch
-    - chmod +x /usr/bin/nrun
-    - chmod +x /usr/bin/prime-switch
+    sources:
+      - packages:
+        - switcheroo-control
 
   - name: enable-wayland
     type: shell
