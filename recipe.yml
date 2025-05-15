@@ -45,24 +45,12 @@ stages:
       - modules/200-plasma-common.yml
       - modules/999-cleanup.yml
 
-  - name: cleanup
-    type: shell
-    commands:
-    - apt autoremove -y
-    - apt clean
-    - lpkg --lock
-
-  - name: sysconf-setup
-    type: shell
-    commands:
-      - rsync -a /etc/ /sysconf/
-
   - name: nvidia-official-repo
     type: shell
     commands:
     - curl -fSsL https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/3bf863cc.pub | gpg --dearmor -o /usr/share/keyrings/nvidia-drivers.gpg
     - echo 'deb [signed-by=/usr/share/keyrings/nvidia-drivers.gpg] https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /' > /etc/apt/sources.list.d/nvidia-drivers.list
-    - apt-get update
+    - apt update
 
   - name: nvidia-official-driver
     type: shell
@@ -116,6 +104,11 @@ stages:
     - SUDO_FORCE_REMOVE=yes apt purge -y sudo
     - lpkg --lock
     - rm /etc/apt/sources.list.d/nvidia-drivers.list
+
+  - name: sysconf-setup
+    type: shell
+    commands:
+      - rsync -a /etc/ /sysconf/
 
   - name: fsguard
     type: fsguard
